@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var helmet = require('helmet');
 
-var indexRouter = require('./routes/index');
+
+// 用户相关
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -22,10 +23,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
-app.use('/node', function (req, res) {
-  res.json({message: '200', data: []})
+app.use(function(req, res, next) {
+  console.log(req.params)
+  next()
 });
+
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -40,7 +43,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({message: '请求失败', status: err.status || 500, data: null});
 });
 
 
